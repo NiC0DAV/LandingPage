@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <title>Registra tus datos!</title>
 </head>
 <body>
-
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -58,9 +58,32 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
+<?php
+    require_once("conexion.php");
 
+    $databaseConnection = new DB; //Instancia la clase
+    // $databaseConnection->databaseConnect();
+    if (isset($_POST)){
+        $name = $databaseConnection->sanitizeProtection($_POST['name']);
+        $surname =  $databaseConnection->sanitizeProtection($_POST['surname']);
+        $email =  $databaseConnection->sanitizeProtection($_POST['email']);
+        $phone =  $databaseConnection->sanitizeProtection($_POST['phone']);
+        $id =  $databaseConnection->sanitizeProtection($_POST['id']);
+        $message =  $databaseConnection->sanitizeProtection($_POST['message']);
+
+        $execute = $databaseConnection->createInsertion($name, $surname, $email, $phone, $id, $message);
+                        
+        if($execute){
+            $message= "Formulario enviado con exito con éxito";
+			$class="alert alert-success";        
+        }else{
+            $message="Envío de formulario fallido";
+            $class="alert alert-danger";          
+        }
+    }
+?>
     <div class="container-fluid">
-        <div class="formulario mt-5 px-2" style="border:solid #f8f9fa; border-radius:5px; max-width:800px; margin: auto;">
+        <div class="formulario mt-5 mb-3 px-2">
             <h3 class="text-center col">Formulario de registro</h3>
             <form method="post" action="">
                 <div class="form-group">
@@ -88,8 +111,11 @@
                     <textarea id="message" class="form-control" name="message" rows="3"></textarea>
                 </div>
                 <div class="text-center col">
-                    <input type="submit" class="btn btn-success" value="Guardar" style="width:240px;">
+                    <input type="submit" class="btn boton btn-success" value="Guardar">
                 </div>
+                <div class="<?php echo $class?>" id="notification"> 
+				  <?php echo $message;?>
+				</div>	
             </form>
         </div>
     </div>

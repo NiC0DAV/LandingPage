@@ -1,0 +1,10 @@
+.formulario{
+    border:solid #f8f9fa; 
+    border-radius:5px; 
+    max-width:800px; 
+    margin: auto;
+}
+
+.boton{
+    width:240px;
+}
